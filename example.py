@@ -11,6 +11,7 @@ import sys
 import time
 import logging
 import signal
+import traceback
 
 def switch_and_leds(t):
     print("-- LED & Switch Test --")
@@ -25,9 +26,9 @@ def switch_and_leds(t):
     t.set_reset_btn(1)
     time.sleep(0.01)
     t.set_reset_btn(0)
-    time.sleep(0.2)
+    time.sleep(0.3)
 
-    for i in range(15):
+    for i in range(16):
 
         print('DPY, LED:')
         dpy_h, dot_h, dpy_l, dot_l = t.get_dpy_decoded()
@@ -41,13 +42,13 @@ def switch_and_leds(t):
         t.set_clock_btn(1)
         time.sleep(0.01)
         t.set_clock_btn(0)
-        time.sleep(0.2)
+        time.sleep(0.5)
 
     # Emulate reset button press
     t.set_reset_btn(1)
     time.sleep(0.01)
     t.set_reset_btn(0)
-    time.sleep(0.2)
+    time.sleep(0.3)
     print('After reset:\n (%04x,%04x)' % (t.get_dpys(), t.get_leds()))
 
 def main():
@@ -70,30 +71,36 @@ def main():
 
     signal.signal(signal.SIGINT, signal_handler)
 
-    print("--- Login ---")
-    t.login(sys.argv[1], sys.argv[2])
-    t.allocate_board(thinpad.BOARD_REV2) # Choose Rev.2 or Rev.3
+    try:
 
-    # Memory Read & Write
-    print('-- RAM Read after Write Test --')
-    test_data = b"Test Binary\x00\x01\x02\xff\xff"
-    t.write_memory(thinpad.MEM_EXT_RAM, test_data, offset=0)
-    t.write_memory(thinpad.MEM_EXT_RAM, b'114514', offset=16)
-    print("Read Back: ")
-    print(t.read_memory(thinpad.MEM_EXT_RAM, 18, offset=4))
+        print("--- Login ---")
+        t.login(sys.argv[1], sys.argv[2])
+        t.allocate_board(thinpad.BOARD_REV2) # Choose Rev.2 or Rev.3
 
-    print("Upload Test Bitstream")
-    t.upload_design(sys.argv[3])
+        # Memory Read & Write
+        print('-- RAM Read after Write Test --')
+        test_data = b"Test Binary\x00\x01\x02\xff\xff"
+        t.write_memory(thinpad.MEM_EXT_RAM, test_data, offset=0)
+        t.write_memory(thinpad.MEM_EXT_RAM, b'114514', offset=16)
+        print("Read Back: ")
+        print(t.read_memory(thinpad.MEM_EXT_RAM, 18, offset=4))
+        # t.read_memory(thinpad.MEM_FLASH, 0x800000)
+        # t.read_memory(thinpad.MEM_BASE_RAM, 0x400000)
 
-    switch_and_leds(t)
+        print("Upload Test Bitstream")
+        t.upload_design(sys.argv[3])
 
-    # UART Loopback test
-    print('-- UART Loopback Test --')
-    t.open_uart_port(thinpad.UART_EXT, baud=9600)
-    t.write_uart('hello')
-    print("received:", bytes(t.read_uart(6, timeout=1)))
+        switch_and_leds(t)
 
-    print('-- Closing --')
+        # UART Loopback test
+        print('-- UART Loopback Test --')
+        t.open_uart_port(thinpad.UART_EXT, baud=9600)
+        t.write_uart('hello')
+        print("received:", bytes(t.read_uart(6, timeout=1)))
+    except:
+        traceback.print_exc()
+
+    print('-- Disconnect --')
     t.close()
 
 if __name__ == '__main__':

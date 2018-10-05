@@ -170,7 +170,7 @@ class ThinpadCloud:
 
     def upload_design(self, filename):
         with open(filename, 'rb') as fd:
-            r = self.sess.post(self.base_uri+'/upload',
+            r = self.sess.post(self.base_uri+'/upload', timeout=80,
                             files={'bitstream': fd},
                             allow_redirects=False)
         self.logger.debug('/upload: %d', r.status_code)
@@ -294,7 +294,7 @@ class ThinpadCloud:
     def read_memory(self, memory, size=0x1000, offset=0):
         if offset % 2 != 0 or size % 2 != 0:
             raise ValueError("size & offset should by multiple of 2")
-        r = self.sess.post(self.base_uri+'/flash_ram', timeout=10,
+        r = self.sess.post(self.base_uri+'/flash_ram',
                            files={'placeholder': 'null'},
                            data={'op': 'read_mem', 'offset': '%x' % (offset), 'size': '%x' % (size), 'type': memory})
         self.logger.debug('/flash_ram: %d', r.status_code)
@@ -314,7 +314,7 @@ class ThinpadCloud:
         if offset % 2 != 0 or size % 2 != 0:
             raise ValueError("size & offset should be multiple of 2")
 
-        r = self.sess.post(self.base_uri+'/flash_ram', timeout=10,
+        r = self.sess.post(self.base_uri+'/flash_ram',
                            files={'datafile': ('file1.bin', data)},
                            data={'op': 'write_mem', 'offset': '%x' % (offset), 'type': memory})
         self.logger.debug('/flash_ram: %d', r.status_code)

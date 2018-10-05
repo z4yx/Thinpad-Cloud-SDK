@@ -1,6 +1,6 @@
 from .cloud import ThinpadCloud
 
-__version__ = '1.0.0'
+__version__ = '1.1.0'
 
 BOARD_REV2 = 2
 BOARD_REV3 = 7
