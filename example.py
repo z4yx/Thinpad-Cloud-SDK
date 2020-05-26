@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# Install Denpendencies:
+# Install Dependencies:
 #   pip install requests socketIO-client
 # Or
 #   pip install -r requirements.txt
