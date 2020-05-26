@@ -20,7 +20,7 @@ def switch_and_leds(t):
     for i in range(32):
         t.set_dip_sw(i, 1)
     # Or set them all at once
-    t.set_all_switchs(dip_sw=[1]*32)
+    t.set_all_switches(dip_sw=[1]*32)
 
     # Emulate reset button press
     t.set_reset_btn(1)

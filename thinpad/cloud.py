@@ -214,7 +214,7 @@ class ThinpadCloud:
         raw = self.get_dpys()
         return self._decode_dpy(raw>>8) + self._decode_dpy(raw&0xff)
 
-    def set_all_switchs(self, dip_sw=None, touch_btn=None, clock_btn=None, reset_btn=None):
+    def set_all_switches(self, dip_sw=None, touch_btn=None, clock_btn=None, reset_btn=None):
         if dip_sw is not None and len(dip_sw)==32:
             self.led_switch_status['dip_switches'] = dip_sw
         if touch_btn is not None and len(touch_btn) == 4:
@@ -229,18 +229,18 @@ class ThinpadCloud:
         return self._socketio_send('sendSwitches', self.led_switch_status)
 
     def set_clock_btn(self, singal_value):
-        return self.set_all_switchs(clock_btn=singal_value)
+        return self.set_all_switches(clock_btn=singal_value)
 
     def set_reset_btn(self, singal_value):
-        return self.set_all_switchs(reset_btn=singal_value)
+        return self.set_all_switches(reset_btn=singal_value)
 
     def set_dip_sw(self, index=0, singal_value=0):
         self.led_switch_status['dip_switches'][index] = singal_value
-        return self.set_all_switchs()
+        return self.set_all_switches()
 
     def set_touch_btn(self, index=0, singal_value=0):
         self.led_switch_status['touch_switches'][index] = singal_value
-        return self.set_all_switchs()
+        return self.set_all_switches()
 
     def open_uart_port(self, port, baud=115200, parity='NONE', databits=8, stopbits=1):
         assert parity in ['NONE','ODD','EVEN']
