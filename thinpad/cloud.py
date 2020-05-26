@@ -10,6 +10,7 @@ import threading
 import time
 import logging
 import queue
+import os
 
 class BackgroundThread(threading.Thread):
     def __init__(self, socketIO, logger):
@@ -35,7 +36,9 @@ class ThinpadCloud:
     def __init__(self):
         super().__init__()
         self.logger = logging.getLogger(__name__)
-        self.base_uri = 'http://thinpad.dynv6.net:8080/thinpad'
+        self.base_uri = os.getenv("THINPAD_BASEURL", 'https://lab.cs.tsinghua.edu.cn/thinpad')
+        if self.base_uri.endswith('/'):
+            self.base_uri = self.base_uri[:-1]
         self.sess = requests.Session()
         self.socketIO = None
         self.socketIOLogin = False
