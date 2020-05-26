@@ -3,6 +3,7 @@ from .__version__ import __version__
 
 BOARD_REV2 = 2
 BOARD_REV3 = 7
+BOARD_LOONG = 6
 
 UART_CPLD = 0
 UART_EXT = 1
