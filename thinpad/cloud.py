@@ -179,6 +179,8 @@ class ThinpadCloud:
         self.logger.debug('/upload: %d', r.status_code)
         r.raise_for_status()
         if r.status_code == 302:
+            if r.headers['location'].endswith('/work'):
+                return True
             self.logger.error("redirected to "+r.headers['location'])
             return False
         return True
