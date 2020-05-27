@@ -88,17 +88,19 @@ def main():
             print('Flash error')
             return
 
-        switch_and_leds(t)
-
         # UART Loopback test
-        print('-- UART Loopback Test --')
         t.open_uart_port(thinpad.UART_EXT, baud=115200)
         while True:
-            t.write_uart('hello')
-            r = bytes(t.read_uart(5, timeout=1))
-            if len(r) != 5:
-                print(f"error: received({len(r)}):", r)
-            time.sleep(1)
+            if random.randint(0, 99) < 50:
+                print('-- UART Loopback Test --')
+                t.write_uart('hello')
+                r = bytes(t.read_uart(5, timeout=1))
+                if len(r) != 5:
+                    print(f"error: received({len(r)}):", r)
+            else: 
+                switch_and_leds(t)
+
+            time.sleep(0.1 + random.random())
     except:
         traceback.print_exc()
     finally:
